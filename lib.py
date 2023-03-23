@@ -16,9 +16,28 @@ simulatora=['ibmq_qasm_simulator', 'simulator_mps', 'simulator_statevector', 'si
 
 
 def show_block(circuit):
-    #plt.figure(figsize=(5, 5))
     circuit.draw(output='mpl', style={'backgroundcolor': '#EEEEEE'})
+    wm = plt.get_current_fig_manager()
+    wm.window.wm_geometry("450x900+0+0")
     plt.show(block=False)
     print(circuit)
     input()
 
+
+def show_bloch(circuit):
+    result = execute(circuit, backend = BasicAer.get_backend('statevector_simulator')).result()
+    statevector = result.get_statevector()
+    plot_bloch_multivector(statevector)
+    wm = plt.get_current_fig_manager()
+    wm.window.wm_geometry("450x600+0+0")
+    plt.show(block=False)
+    input()
+    return statevector
+
+
+def show_histo(circuit, back, shts):
+    result = execute(circuit, backend=back, shots = shts).result()
+    counts = result.get_counts()
+    plot_histogram(counts)
+    plt.show(block=False)
+    input()

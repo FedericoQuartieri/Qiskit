@@ -1,21 +1,20 @@
 from lib import *
 
-circuit = QuantumCircuit(2, 2)
+circuit = QuantumCircuit(1, 1)
 circuit.h(0)
 
-show_block(circuit)
-
-result = execute(circuit, backend = BasicAer.get_backend('statevector_simulator')).result()
-statevector = result.get_statevector()
-plot_bloch_multivector(statevector)
-
-circuit.y([0,1])
 
 show_block(circuit)
+statevector = show_bloch(circuit)
 
 
-result = execute(circuit, backend = BasicAer.get_backend('statevector_simulator')).result()
-statevector = result.get_statevector()
-plot_bloch_multivector(statevector)
+# circuit.y(0)
+# show_block(circuit)
+# statevector = show_bloch(circuit)
+
+circuit.z(0)
+show_block(circuit)
+statevector = show_bloch(circuit)
+
 
 print(statevector)

@@ -8,7 +8,14 @@ circuit.barrier()
 circuit.h(1)
 circuit.cx(1,2)
 
+statevector = show_bloch(circuit)
+print(statevector)
+
 circuit.cx(0,1)
+
+statevector = show_bloch(circuit)
+print(statevector)
+
 circuit.h(0)
 
 circuit.barrier()
@@ -27,4 +34,6 @@ show_histo(circuit, back('simulator'), 1000)
 
 statevector = show_bloch(circuit)
 print(statevector)
+
+
 

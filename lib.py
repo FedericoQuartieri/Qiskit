@@ -12,8 +12,8 @@ def back(prov):
         return provider.get_backend('ibmq_lima')
 
 
-actual=['ibm_nairobi', 'ibmq_lima', 'ibmq_belem', 'ibmq_manila', 'ibm_oslo',  'ibmq_jakarta', 'ibm_lagos' , 'ibm_perth', 'ibmq_quito']
-simulatora=['ibmq_qasm_simulator', 'simulator_mps', 'simulator_statevector', 'simulator_extended_stabilizer', 'simulator_stabilizer']
+#actual=['ibm_nairobi', 'ibmq_lima', 'ibmq_belem', 'ibmq_manila', 'ibm_oslo',  'ibmq_jakarta', 'ibm_lagos' , 'ibm_perth', 'ibmq_quito']
+#simulatora=['ibmq_qasm_simulator', 'simulator_mps', 'simulator_statevector', 'simulator_extended_stabilizer', 'simulator_stabilizer']
 
 
 def show_circuit(circuit):
@@ -32,6 +32,7 @@ def show_bloch(circuit):
     wm = plt.get_current_fig_manager()
     wm.window.wm_geometry("1450x230+0+0")
     plt.show(block=False)
+    print(statevector)
     input()
     return statevector
 
@@ -58,13 +59,20 @@ def print_statevector (circuit):  # pip install ipython, sudo apt-get install te
     #         'ytick.labelsize':'x-large
     # })
 
-    ket = Statevector(circuit)
+    ket = Statevector(circuit) # esplode se misuri
     ket_latex = "$" + state_drawer(ket, 'latex_source') + "$"
     fig = plt.figure()
     plt.plot()
     fig.suptitle(ket_latex, fontsize=25, y=0.65)
-
+    
     wm = plt.get_current_fig_manager()
     wm.window.wm_geometry("1450x230+0+0")
     plt.show(block=False)
     input()
+
+
+
+def show(circuit):
+    show_circuit(circuit)
+    show_bloch(circuit)
+    print_statevector(circuit)

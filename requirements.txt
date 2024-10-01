@@ -1,0 +1,8 @@
+matplotlib==3.9.2
+python-dotenv==1.0.1
+qiskit==1.2.1
+qiskit_aer==0.15.1
+qiskit_algorithms==0.3.0
+qiskit_ibm_runtime==0.30.0
+PyQt5
+pylatexenc

@@ -1,5 +1,5 @@
 from lib import *
-from qiskit.aqua.algorithms import Shor
+from qiskit_algorithms import Shor
 from qiskit.aqua import QuantumInstance
 
 

@@ -1,16 +1,33 @@
 from qiskit import *
-from qiskit_ibm_provider import IBMProvider
-from qiskit.tools.visualization import plot_histogram, plot_bloch_multivector, state_drawer
+from qiskit.visualization import plot_histogram, plot_bloch_multivector, state_drawer
+import matplotlib
+matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
+
 from qiskit.quantum_info import Statevector
+from qiskit_aer import Aer
+from qiskit_ibm_runtime import QiskitRuntimeService
+
+from dotenv import load_dotenv
+import os
+load_dotenv()  # Load the environment variables from .env
+
+my_token = os.getenv("MY_SECRET_TOKEN")
+if my_token is None:
+    raise ValueError("Token not found in environment variables")
+
+service = QiskitRuntimeService.save_account(channel="ibm_quantum", token=my_token, overwrite=True)
+
+
+
 
 def back(prov):
     if (prov == "simulator"):
         return Aer.get_backend('qasm_simulator')
     else:
-        provider = IBMProvider()
-        return provider.get_backend('ibmq_lima')
-
+        service = QiskitRuntimeService(channel="ibm_quantum", token=my_token)
+        backend = service.least_busy(operational=True, simulator=False)
+        return backend
 
 #actual=['ibm_nairobi', 'ibmq_lima', 'ibmq_belem', 'ibmq_manila', 'ibm_oslo',  'ibmq_jakarta', 'ibm_lagos' , 'ibm_perth', 'ibmq_quito']
 #simulatora=['ibmq_qasm_simulator', 'simulator_mps', 'simulator_statevector', 'simulator_extended_stabilizer', 'simulator_stabilizer']
@@ -19,26 +36,29 @@ def back(prov):
 def show_circuit(circuit):
     circuit.draw(output='mpl', style={'backgroundcolor': '#EEEEEE'})
     wm = plt.get_current_fig_manager()
-    wm.window.wm_geometry("1450x230+0+0")
+    wm.window.setGeometry(0, 0, 1450, 230)
     plt.show(block=False)
     print(circuit)
     input()
 
 
 def show_bloch(circuit):
-    result = execute(circuit, backend = BasicAer.get_backend('statevector_simulator')).result()
+    backend = Aer.get_backend('statevector_simulator')
+    new_circuit = transpile(circuit, backend)
+    result = backend.run(new_circuit).result()
     statevector = result.get_statevector()
     plot_bloch_multivector(statevector)
     wm = plt.get_current_fig_manager()
-    wm.window.wm_geometry("1450x230+0+0")
+    wm.window.setGeometry(0, 0, 1450, 230)
     plt.show(block=False)
     print(statevector)
     input()
     return statevector
 
 
-def show_histo(circuit, back, shts):
-    result = execute(circuit, backend=back, shots = shts).result()
+def show_histo(circuit, backend, shts):
+    new_circuit = transpile(circuit, backend, shts)
+    result = backend.run(new_circuit).result()
     counts = result.get_counts()
     plot_histogram(counts)
     plt.show(block=False)
@@ -64,9 +84,8 @@ def print_statevector (circuit):  # pip install ipython, sudo apt-get install te
     fig = plt.figure()
     plt.plot()
     fig.suptitle(ket_latex, fontsize=25, y=0.65)
-    
     wm = plt.get_current_fig_manager()
-    wm.window.wm_geometry("1450x230+0+0")
+    wm.window.setGeometry(0, 0, 1450, 230)
     plt.show(block=False)
     input()
 
